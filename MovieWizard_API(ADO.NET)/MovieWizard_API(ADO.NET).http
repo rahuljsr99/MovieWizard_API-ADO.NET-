@@ -1,0 +1,6 @@
+@MovieWizard_API_ADO.NET__HostAddress = http://localhost:5252
+
+GET {{MovieWizard_API_ADO.NET__HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
