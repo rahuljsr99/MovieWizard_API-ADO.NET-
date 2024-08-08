@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MovieWizardAPI.Models
 {
-    public class Movie
+    public class MovieRequest
     {
         public int MovieID { get; set; }
         public string? Title { get; set; }

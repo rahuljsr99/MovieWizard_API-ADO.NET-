@@ -4,36 +4,53 @@ using System.Collections;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace MovieWizardAPI.Data
 {
-    public class MovieWizardRepository : IMovieRepository
+    public class GenreRepository : IGenreRepository
     {
         private readonly IConfiguration _configuration;
-        private readonly string _connectionString;
+        private readonly string? _connectionString;
 
-        public MovieWizardRepository (IConfiguration configuration)
+        public GenreRepository(IConfiguration configuration)
         {
             _configuration = configuration;
             _connectionString = configuration.GetConnectionString("MovieWizardConnection");
         }
 
-        public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
+        public async Task<IEnumerable<MovieGenre>> GetAllGenresAsync()
         {
-            var allMovieList = new List<Movie>();
+            var allGenreList = new List<MovieGenre>();
             using(SqlConnection connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                string query = "SELECT * FROM Movies";
+                string query = "SELECT * FROM Genre";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (reader.Read())
                         {
-                            var movie = new Movie()
+                            var genre = new MovieGenre()
                             {
-                                MovieID = (int)reader["MovieID"],
+                                GenreId = (int)reader["GenreId"],
+                                GenreName = (string)reader["GenreName"]
+                            };
+                            allGenreList.Add(genre);
+                        }
+                      
+                    }
+                }
+            }
+            return allGenreList;
+        }
+
+    }
+}
+
+                              /*  MovieID = (int)reader["MovieID"],
                                 Title = (string)reader["Title"],
                                 Description = (string)reader["Description"],
                                 Genre = (string)reader["Genre"],
@@ -48,16 +65,4 @@ namespace MovieWizardAPI.Data
                                 ReleaseDate = (DateTime)reader["ReleaseDate"],
                                 UpdatedAt = (DateTime)reader["UpdatedAt"],
                                 CreatedBy = (string)reader["CreatedBy"],
-                                UpdatedBy = (string)reader["UpdatedBy"]
-                            };
-                            allMovieList.Add(movie);
-                        }
-                      
-                    }
-                }
-            }
-            return allMovieList;
-        }
-
-    }
-}
+                                UpdatedBy = (string)reader["UpdatedBy"]*/

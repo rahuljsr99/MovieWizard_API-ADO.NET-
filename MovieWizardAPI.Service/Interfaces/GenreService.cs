@@ -7,8 +7,9 @@ using MovieWizardAPI.Models;
 
 namespace MovieWizardAPI.Service.Interfaces
 {
-    public interface IMovieService
+    public interface IGenreService
     {
-        Task<List<MovieRequest>> GetAllMovies();
+        Task<List<MovieGenre>> GetAllGenres();
+        
     }
 }

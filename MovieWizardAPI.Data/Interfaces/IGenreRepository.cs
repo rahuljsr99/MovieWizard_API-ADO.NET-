@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using MovieWizardAPI.Models;
 
-namespace MovieWizardAPI.Service.Interfaces
+namespace MovieWizardAPI.Data.Interfaces
 {
-    public interface IMovieService
+    public interface IGenreRepository
     {
-        Task<List<MovieRequest>> GetAllMovies();
+        Task<IEnumerable<MovieGenre>> GetAllGenresAsync();
     }
 }

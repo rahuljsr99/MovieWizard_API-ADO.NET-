@@ -7,19 +7,18 @@ namespace MovieWizardAPI.Service
 {
     public class MovieService : IMovieService
     {
-        private readonly IMovieService _movieService;
         private readonly IMovieRepository _movieRepository;
 
-        MovieService(IMovieRepository movieRepository)
+        public MovieService(IMovieRepository movieRepository)
         {
             _movieRepository = movieRepository;
         }
 
 
-        public async Task<List<Movie>> GetAllMovies()
+        public async Task<List<MovieRequest>> GetAllMovies()
         {
             var queryResult = await _movieRepository.GetAllMoviesAsync();
-            List<Movie> movies = queryResult.ToList();
+            List<MovieRequest> movies = queryResult.ToList();
             return movies;
         }
     }

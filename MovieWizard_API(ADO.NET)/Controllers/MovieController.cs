@@ -10,16 +10,19 @@ namespace MovieWizard_API_ADO.NET_.Controllers
     {
         private readonly IMovieService _movieService;
 
-        public MovieController()
+        public MovieController(IMovieService movieService)
         {
-
+            _movieService = movieService;
         }
 
         [HttpGet("GetAllMovies")]
-        public async Task<ActionResult<List<Movie>>> GetAllMovies()
+        public async Task<ActionResult<List<MovieRequest>>> GetAllMovies()
         {
-            List<Movie> movieList = await _movieService.GetAllMovies();
+            List<MovieRequest> movieList = await _movieService.GetAllMovies();
             return Ok(movieList);
         }
+
+        [HttpPost("AddMovie")]
+        public async Task<ActionResult> AddMovie()
     }
 }
