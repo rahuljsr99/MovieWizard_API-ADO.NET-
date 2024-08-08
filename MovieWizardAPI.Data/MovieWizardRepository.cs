@@ -3,18 +3,25 @@ using MovieWizardAPI.Models;
 using System.Collections;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace MovieWizardAPI.Data
 {
     public class MovieWizardRepository : IMovieRepository
     {
+        private readonly IConfiguration _configuration;
+        private readonly string _connectionString;
 
-        private readonly string connectionString = "Server=(localdb)\\MovieWizardLocal;Database=MovieWizardADO;Trusted_Connection=True;MultipleActiveResultSets=true;";
+        public MovieWizardRepository (IConfiguration configuration)
+        {
+            _configuration = configuration;
+            _connectionString = configuration.GetConnectionString("MovieWizardConnection");
+        }
 
         public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
         {
             var allMovieList = new List<Movie>();
-            using(SqlConnection connection = new SqlConnection(connectionString))
+            using(SqlConnection connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 string query = "SELECT * FROM Movies";

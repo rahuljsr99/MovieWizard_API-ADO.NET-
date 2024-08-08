@@ -10,12 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IMovieRepository>(provider =>
-{
-    var config = provider.GetRequiredService<IConfiguration>();
-    var movierepositoryInterface = provider.GetRequiredService<IMovieRepository>();
-    return new MovieWizardRepository(movierepositoryInterface);
-});
+builder.Services.AddSingleton<IMovieRepository, MovieWizardRepository>();
+
 
 var app = builder.Build();
 

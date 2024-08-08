@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MovieWizardAPI.Models\MovieWizardAPI.Models.csproj" />
-    <ProjectReference Include="..\MovieWizardAPI.Service\MovieWizardAPI.Service.csproj" />
   </ItemGroup>
 
 </Project>
