@@ -10,5 +10,6 @@ namespace MovieWizardAPI.Data.Interfaces
     public interface IGenreRepository
     {
         Task<IEnumerable<MovieGenre>> GetAllGenresAsync();
+        Task<List<MovieGenresResponse>> GetAllMovieGenresAsync();
     }
 }

@@ -23,7 +23,7 @@ namespace MovieWizardAPI.Data
         public async Task<IEnumerable<MovieGenre>> GetAllGenresAsync()
         {
             var allGenreList = new List<MovieGenre>();
-            using(SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 string query = "SELECT * FROM Genre";
@@ -40,29 +40,69 @@ namespace MovieWizardAPI.Data
                             };
                             allGenreList.Add(genre);
                         }
-                      
+
                     }
                 }
             }
             return allGenreList;
         }
 
+        public async Task<List<MovieGenresResponse>> GetAllMovieGenresAsync()
+        {
+            List<MovieGenresResponse> listMovieGenResponse = new List<MovieGenresResponse>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+
+                string query = $"SELECT  MG.*,G.GenreName from MovieGenres MG" +
+                               $" INNER JOIN Genre G" +
+                               $" on G.GenreId = MG.GenreID";
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (var reader = await command.ExecuteReaderAsync())
+
+                        
+                    {
+                        while (reader.Read())
+                        {
+                            var movieId = (int)reader["MovieId"];
+                            MovieGenresResponse movieGenreResponse = new MovieGenresResponse
+                            {
+
+                                MovieID = (int)reader["MovieId"],
+                                GenreId = (int)reader["GenreId"],
+                                GenreName = (string)reader["GenreName"]
+
+
+                            };
+                            listMovieGenResponse.Add(movieGenreResponse);
+                        }
+                    }
+                }
+            }
+            return listMovieGenResponse;
+
+        }
+
+
     }
 }
 
-                              /*  MovieID = (int)reader["MovieID"],
-                                Title = (string)reader["Title"],
-                                Description = (string)reader["Description"],
-                                Genre = (string)reader["Genre"],
-                                Budget = (decimal)reader["Budget"],
-                                IMDBRating = (decimal)reader["IMDBRating"],
-                                RottenTomatoesRating = (decimal)reader["RottenTomatoesRating"],
-                                Price = (decimal)reader["Price"],
-                                IsActive = (bool)reader["IsActive"],
-                                Poster = (byte[])reader["Poster"],
-                                Revenue = (decimal)reader["Revenue"],
-                                CreatedAt = (DateTime)reader["CreatedAt"],
-                                ReleaseDate = (DateTime)reader["ReleaseDate"],
-                                UpdatedAt = (DateTime)reader["UpdatedAt"],
-                                CreatedBy = (string)reader["CreatedBy"],
-                                UpdatedBy = (string)reader["UpdatedBy"]*/
+/*  MovieID = (int)reader["MovieID"],
+  Title = (string)reader["Title"],
+  Description = (string)reader["Description"],
+  Genre = (string)reader["Genre"],
+  Budget = (decimal)reader["Budget"],
+  IMDBRating = (decimal)reader["IMDBRating"],
+  RottenTomatoesRating = (decimal)reader["RottenTomatoesRating"],
+  Price = (decimal)reader["Price"],
+  IsActive = (bool)reader["IsActive"],
+  Poster = (byte[])reader["Poster"],
+  Revenue = (decimal)reader["Revenue"],
+  CreatedAt = (DateTime)reader["CreatedAt"],
+  ReleaseDate = (DateTime)reader["ReleaseDate"],
+  UpdatedAt = (DateTime)reader["UpdatedAt"],
+  CreatedBy = (string)reader["CreatedBy"],
+  UpdatedBy = (string)reader["UpdatedBy"]*/
+

@@ -10,5 +10,6 @@ namespace MovieWizardAPI.Data.Interfaces
     public interface IMovieRepository
     {
         Task<IEnumerable<MovieRequest>> GetAllMoviesAsync();
+        Task<int> AddMovieAsync(MovieRequest movieRequest);
     }
 }
