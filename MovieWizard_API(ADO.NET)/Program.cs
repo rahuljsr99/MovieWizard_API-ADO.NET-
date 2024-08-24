@@ -32,5 +32,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseCors(options => options
+    .AllowAnyOrigin()  // Allow requests from any origin
+    .AllowAnyMethod()   // Allow any HTTP method (GET, POST, PUT, etc.)
+    .AllowAnyHeader()); // Allow any request header
+
 
 app.Run();
+

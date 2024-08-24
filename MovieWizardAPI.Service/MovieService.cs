@@ -13,13 +13,16 @@ namespace MovieWizardAPI.Service
         {
             _movieRepository = movieRepository;
         }
-
-
         public async Task<List<MovieRequest>> GetAllMovies()
         {
             var queryResult = await _movieRepository.GetAllMoviesAsync();
-            List<MovieRequest> movies = queryResult.ToList();
+            var movies = queryResult.ToList();
             return movies;
+        }
+        public async Task<int> AddMovie(MovieRequest movieRequest)
+        {
+            var queryResult = await _movieRepository.AddMovieAsync(movieRequest);
+            return queryResult;
         }
     }
 }

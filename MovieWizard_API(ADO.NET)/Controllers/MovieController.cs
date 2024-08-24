@@ -18,11 +18,28 @@ namespace MovieWizard_API_ADO.NET_.Controllers
         [HttpGet("GetAllMovies")]
         public async Task<ActionResult<List<MovieRequest>>> GetAllMovies()
         {
-            List<MovieRequest> movieList = await _movieService.GetAllMovies();
+            var movieList = await _movieService.GetAllMovies();
             return Ok(movieList);
         }
 
         [HttpPost("AddMovie")]
-        public async Task<ActionResult> AddMovie()
+        public async Task<ActionResult> AddMovie(MovieRequest movieRequest)
+        {
+            if (movieRequest == null)
+            {
+                return BadRequest($"Invalid request");
+            }
+
+            var result = await _movieService.AddMovie(movieRequest);
+            if (result == 0)
+            {
+                return BadRequest("Failed to insert any record.");
+            }
+            else
+            {
+                return Ok("Movie inserted successfully.");
+            }
+            
+        }
     }
 }

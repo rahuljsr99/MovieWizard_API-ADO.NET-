@@ -21,5 +21,11 @@ namespace MovieWizardAPI.Service
             List<MovieGenre> allMovieGenres = queryResult.ToList();
             return allMovieGenres;
         }
+
+        public async Task<List<MovieGenresResponse>> GetAllMovieGenres()
+        {
+            List<MovieGenresResponse> result = await _genreRepository.GetAllMovieGenresAsync();
+            return result;
+        }
     }
 }

@@ -10,6 +10,8 @@ namespace MovieWizardAPI.Service.Interfaces
     public interface IGenreService
     {
         Task<List<MovieGenre>> GetAllGenres();
-        
+        Task<List<MovieGenresResponse>> GetAllMovieGenres();
+
+
     }
 }

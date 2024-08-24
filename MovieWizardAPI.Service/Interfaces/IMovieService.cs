@@ -10,5 +10,6 @@ namespace MovieWizardAPI.Service.Interfaces
     public interface IMovieService
     {
         Task<List<MovieRequest>> GetAllMovies();
+        Task<int> AddMovie(MovieRequest movieRequest);
     }
 }

@@ -20,6 +20,14 @@ namespace MovieWizard_API_ADO.NET_.Controllers
            List <MovieGenre> allMovieGenres = await _genreService.GetAllGenres();
            return Ok(allMovieGenres);
         }
+        [HttpGet("GetAllMovieGenres")]
+        public async Task<ActionResult<List<MovieGenresResponse>>> GetAllMovieGenres()
+        {
+            List<MovieGenresResponse> allMovieGenres = await _genreService.GetAllMovieGenres();
+            if(allMovieGenres.Count == 0)
+                { return BadRequest($"No records"); }
+            return Ok(allMovieGenres);
+        }
 
     }
 }
