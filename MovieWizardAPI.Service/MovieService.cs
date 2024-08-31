@@ -3,6 +3,7 @@ using MovieWizardAPI.Data;
 using MovieWizardAPI.Service.Interfaces;
 using MovieWizardAPI.Data.Interfaces;
 
+
 namespace MovieWizardAPI.Service
 {
     public class MovieService : IMovieService
@@ -23,6 +24,7 @@ namespace MovieWizardAPI.Service
         {
             var queryResult = await _movieRepository.AddMovieAsync(movieRequest);
             return queryResult;
-        }
+        }   
+           
     }
 }

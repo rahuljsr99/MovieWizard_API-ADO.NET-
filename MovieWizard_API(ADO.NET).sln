@@ -5,11 +5,17 @@ VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieWizard_API(ADO.NET)", "MovieWizard_API(ADO.NET)\MovieWizard_API(ADO.NET).csproj", "{7CBE4848-C935-4722-9AF8-0A4E88CFF608}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieWizardAPI.Models", "MovieWizardAPI.Models\MovieWizardAPI.Models.csproj", "{04F8B2CA-A878-4122-8F0D-1A3CD6647961}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieWizardAPI.Models", "MovieWizardAPI.Models\MovieWizardAPI.Models.csproj", "{04F8B2CA-A878-4122-8F0D-1A3CD6647961}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieWizardAPI.Data", "MovieWizardAPI.Data\MovieWizardAPI.Data.csproj", "{178972A9-1061-46C8-9D9E-E98AE1F4AEDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieWizardAPI.Data", "MovieWizardAPI.Data\MovieWizardAPI.Data.csproj", "{178972A9-1061-46C8-9D9E-E98AE1F4AEDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieWizardAPI.Service", "MovieWizardAPI.Service\MovieWizardAPI.Service.csproj", "{A8F47A7A-6EDE-4D1C-8792-E9ADA7E4F6D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieWizardAPI.Service", "MovieWizardAPI.Service\MovieWizardAPI.Service.csproj", "{A8F47A7A-6EDE-4D1C-8792-E9ADA7E4F6D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieWizardController.Tests", "MovieWizard.Tests\MovieWizardController.Tests.csproj", "{7B3EB8B9-71C0-4360-AB59-38C24A7677B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieWizard.Service.Tests", "MovieWizard.Service.Tests\MovieWizard.Service.Tests.csproj", "{BD030421-4726-41F7-9257-D81CC72F4ABA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieWizard.Repository.Tests", "MovieWizard.Repository.Tests\MovieWizard.Repository.Tests.csproj", "{97578C1E-2E31-4A9D-88A7-F2E0AB52D975}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +39,18 @@ Global
 		{A8F47A7A-6EDE-4D1C-8792-E9ADA7E4F6D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8F47A7A-6EDE-4D1C-8792-E9ADA7E4F6D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8F47A7A-6EDE-4D1C-8792-E9ADA7E4F6D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B3EB8B9-71C0-4360-AB59-38C24A7677B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B3EB8B9-71C0-4360-AB59-38C24A7677B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B3EB8B9-71C0-4360-AB59-38C24A7677B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B3EB8B9-71C0-4360-AB59-38C24A7677B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD030421-4726-41F7-9257-D81CC72F4ABA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD030421-4726-41F7-9257-D81CC72F4ABA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD030421-4726-41F7-9257-D81CC72F4ABA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD030421-4726-41F7-9257-D81CC72F4ABA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97578C1E-2E31-4A9D-88A7-F2E0AB52D975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97578C1E-2E31-4A9D-88A7-F2E0AB52D975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97578C1E-2E31-4A9D-88A7-F2E0AB52D975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97578C1E-2E31-4A9D-88A7-F2E0AB52D975}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -133,7 +133,6 @@ namespace MovieWizardAPI.Data
                         }
 
                         // Execute the query and get the new MovieId
-
                         int newMovieId = Convert.ToInt32(await command.ExecuteScalarAsync());
                         if (movie.Genres != null && movie.Genres.Any())
                         {
