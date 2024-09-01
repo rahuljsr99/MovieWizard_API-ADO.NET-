@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MovieWizard_API_ADO.NET_.Controllers
 {
