@@ -10,6 +10,6 @@ namespace MovieWizardAPI.Data.Interfaces
     public interface IActorRepository
     {
         Task<List<Actor>> GetAllActorsAsync();
-        //Task<List<MovieGenresResponse>> GetAllMovieGenresAsync();
+        Task<int> AddActorAsync(Actor addActorRequest);
     }
 }

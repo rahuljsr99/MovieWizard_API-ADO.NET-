@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using System.Reflection;
+using System.Linq.Expressions;
+using System.Data;
 
 namespace MovieWizardAPI.Data
 {
@@ -57,7 +59,43 @@ namespace MovieWizardAPI.Data
 
             return allActorsList;
         }
+        public async Task<int> AddActorAsync(Actor addActorRequest)
+        {
+            int actorId = 0;
 
+
+           using(SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                string query = @"
+                    INSERT INTO Actors (Name, Bio, DateOfBirth, IsActive, ProfilePicture, CreatedAt, UpdatedAt, CreatedBy, UpdatedBy, Nationality)
+                    OUTPUT INSERTED.ActorID
+                    VALUES (@Name, @Bio, @DateOfBirth, @IsActive, @ProfilePicture, @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy, @Nationality);";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Name", addActorRequest.Name);
+                    command.Parameters.AddWithValue("@Bio", addActorRequest.Bio ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@DateOfBirth", addActorRequest.DateOfBirth != DateTime.MinValue ? (object)addActorRequest.DateOfBirth : DBNull.Value);
+                    command.Parameters.AddWithValue("@IsActive", addActorRequest.IsActive);
+                    command.Parameters.AddWithValue("@CreatedAt", addActorRequest.CreatedAt);
+                    command.Parameters.AddWithValue("@UpdatedAt", addActorRequest.UpdatedAt);
+                    command.Parameters.AddWithValue("@CreatedBy", addActorRequest.CreatedBy ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@UpdatedBy", addActorRequest.UpdatedBy ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Nationality", addActorRequest.Nationality ?? (object)DBNull.Value);
+                    if (addActorRequest.ProfilePicture == null)
+                    {
+                        command.Parameters.Add("@ProfilePicture", SqlDbType.VarBinary).Value = DBNull.Value;
+                    }
+                    else
+                    {
+                        command.Parameters.Add("@ProfilePicture", SqlDbType.VarBinary).Value = addActorRequest.ProfilePicture;
+                    }
+                    actorId = (int)await command.ExecuteNonQueryAsync();
+                }
+                return actorId;
+            }
+        }
     }
 }
 

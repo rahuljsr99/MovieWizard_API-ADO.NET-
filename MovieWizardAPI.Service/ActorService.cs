@@ -20,5 +20,9 @@ namespace MovieWizardAPI.Service
             allActorsList = await _actorRepository.GetAllActorsAsync() ;
             return allActorsList;
         }
+        public async Task<int> AddActor(Actor actorRequest)
+        {
+            return await _actorRepository.AddActorAsync(actorRequest);
+        }
     }
 }

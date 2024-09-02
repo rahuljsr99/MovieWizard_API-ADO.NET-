@@ -10,6 +10,6 @@ namespace MovieWizardAPI.Service.Interfaces
     public interface IActorService
     {
         Task<List<Actor>> GetAllActors();
-        //Task<int> AddActor(ActorRequest actorRequest);
+        Task<int> AddActor(Actor actorRequest);
     }
 }

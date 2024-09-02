@@ -6,7 +6,7 @@ namespace MovieWizard_API_ADO.NET_.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ActorController : Controller
+    public class ActorController : ControllerBase
     {
         private readonly IActorService _actorService;
         public ActorController(IActorService actorService)
@@ -14,12 +14,21 @@ namespace MovieWizard_API_ADO.NET_.Controllers
             _actorService = actorService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Actor>>> GetAllActors() {
+        [HttpGet("GetAllActors")]
+        public async Task<ActionResult<List<Actor>>> GetAllActors()
+        {
 
-           var allActorsList = await _actorService.GetAllActors();
+            var allActorsList = await _actorService.GetAllActors();
             return Ok(allActorsList);
         }
 
+        [HttpPost("AddActor")]
+        public async Task<ActionResult> AddActor(Actor addActorRequest)
+        {
+
+            var newActorActionResult = await _actorService.AddActor(addActorRequest);
+            return CreatedAtAction(nameof(AddActor), newActorActionResult);
+
+        }
     }
 }
