@@ -2,8 +2,11 @@ using MovieWizardAPI.Data;
 using MovieWizardAPI.Data.Interfaces;
 using MovieWizardAPI.Service.Interfaces;
 using MovieWizardAPI.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
-var builder = WebApplication.CreateBuilder(args);
+    var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -21,8 +24,24 @@ builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddSingleton<IActorRepository, ActorRepository>();
 builder.Services.AddScoped<IActorService, ActorService>();
 
-
-
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
 var app = builder.Build();
 
 //// Configure the HTTP request pipeline.
@@ -34,6 +53,8 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
+// Configure the HTTP request pipeline.
+app.UseAuthentication(); // This must come before UseAuthorization
 app.UseAuthorization();
 
 app.MapControllers();

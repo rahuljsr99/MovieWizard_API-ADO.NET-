@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieWizardAPI.Service.Interfaces;
 using MovieWizardAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MovieWizard_API_ADO.NET_.Controllers
 {
@@ -16,6 +17,7 @@ namespace MovieWizard_API_ADO.NET_.Controllers
         }
 
         [HttpGet("GetAllMovies")]
+        [Authorize]
         public async Task<ActionResult<List<MovieRequest>>> GetAllMovies()
         {
             var movieList = await _movieService.GetAllMovies();
@@ -23,6 +25,7 @@ namespace MovieWizard_API_ADO.NET_.Controllers
         }
 
         [HttpPost("AddMovie")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddMovie(MovieRequest movieRequest)
         {
             if (movieRequest == null)
