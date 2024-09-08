@@ -44,5 +44,12 @@ namespace MovieWizard_API_ADO.NET_.Controllers
             }
             
         }
+
+        [Authorize]
+        [HttpGet("TestAuth")]
+        public IActionResult TestAuth()
+        {
+            return Ok("Authentication successful!");
+        }
     }
 }
