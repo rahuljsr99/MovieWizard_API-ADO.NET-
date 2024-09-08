@@ -17,7 +17,6 @@ namespace MovieWizard_API_ADO.NET_.Controllers
         }
 
         [HttpGet("GetAllMovies")]
-        [Authorize]
         public async Task<ActionResult<List<MovieRequest>>> GetAllMovies()
         {
             var movieList = await _movieService.GetAllMovies();
@@ -25,7 +24,6 @@ namespace MovieWizard_API_ADO.NET_.Controllers
         }
 
         [HttpPost("AddMovie")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddMovie(MovieRequest movieRequest)
         {
             if (movieRequest == null)
