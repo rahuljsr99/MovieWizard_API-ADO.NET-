@@ -2,6 +2,7 @@
 
 namespace MovieWizard_API_ADO.NET_.Controllers
 {
+    
     public class UsersController : Controller
     {
         public IActionResult Index()
