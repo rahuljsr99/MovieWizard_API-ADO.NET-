@@ -19,7 +19,7 @@ namespace MovieWizard_API_ADO.NET_.Controllers
         [HttpGet("GetAllMovies")]
         public async Task<ActionResult<List<MovieRequest>>> GetAllMovies()
         {
-            var movieList = await _movieService.GetAllMovies();
+            var movieList =  _movieService.GetAllMovies();
             return Ok(movieList);
         }
 

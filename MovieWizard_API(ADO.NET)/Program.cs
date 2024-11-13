@@ -24,6 +24,9 @@ builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddSingleton<IActorRepository, ActorRepository>();
 builder.Services.AddScoped<IActorService, ActorService>();
 
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
