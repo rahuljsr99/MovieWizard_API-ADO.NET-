@@ -19,8 +19,23 @@ namespace MovieWizard_API_ADO.NET_.Controllers
         [HttpGet("GetAllMovies")]
         public async Task<ActionResult<List<MovieRequest>>> GetAllMovies()
         {
-            var movieList =  _movieService.GetAllMovies();
+            var movieList =  _movieService.GetAllMovies().Result;
             return Ok(movieList);
+        }
+
+        [HttpGet("GetAllMoviesForGrid")]
+        public async Task<ActionResult<List<MovieRequest>>> GetAllMoviesForGrid()
+        {
+            var movieList = _movieService.GetAllMoviesForGrid().Result;
+            if (movieList == null)
+            {
+                return BadRequest("movieList null");
+            }
+            else
+            {
+                return Ok(movieList);
+            }
+
         }
 
         [HttpPost("AddMovie")]

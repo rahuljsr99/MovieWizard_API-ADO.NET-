@@ -31,6 +31,12 @@ namespace MovieWizardAPI.Service
             var queryResult = await _usersRepository.AddUserAsync(addUserRequest);
             return queryResult;
         }   
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+           User user = await _usersRepository.GetUserByEmailAsync(email);
+           return user;
+        }
            
     }
 }

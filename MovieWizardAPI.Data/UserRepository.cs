@@ -36,7 +36,7 @@ namespace MovieWizardAPI.Data
                         while (reader.Read())
                         {
                             try
-                            {                              
+                            {
                                 var user = new User
                                 {
                                     UserID = (int)reader["UserId"],
@@ -112,7 +112,7 @@ namespace MovieWizardAPI.Data
                                 Age = reader.GetInt32(reader.GetOrdinal("Age")),
                                 Phone = reader.GetInt32(reader.GetOrdinal("Phone")),
                                 DateOfBirth = reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
-                                
+
                             };
 
                             users.Add(user);
@@ -198,8 +198,50 @@ namespace MovieWizardAPI.Data
 
         public async Task UpdateUserAsync(User updateUser)
         {
-            return ;
+            return;
         }
 
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                await con.OpenAsync();
+                string query = "SELECT * FROM Users where Email = @Email";
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return new User
+                            {
+                                UserID = reader.GetInt32(reader.GetOrdinal("UserID")),
+                                Username = reader.GetString(reader.GetOrdinal("Username")),
+                                Email = reader.GetString(reader.GetOrdinal("Email")),
+                                Role = reader.GetString(reader.GetOrdinal("Role")),
+                                IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive")),
+                                ProfilePicture = reader.IsDBNull(reader.GetOrdinal("ProfilePicture")) ? null : reader["ProfilePicture"] as byte[],
+                                CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt")),
+                                UpdatedAt = reader.GetDateTime(reader.GetOrdinal("UpdatedAt")),
+                                CreatedBy = reader.GetString(reader.GetOrdinal("CreatedBy")),
+                                UpdatedBy = reader.GetString(reader.GetOrdinal("UpdatedBy")),
+                                Nationality = reader.GetString(reader.GetOrdinal("Nationality")),
+                                Age = reader.GetInt32(reader.GetOrdinal("Age")),
+                                Phone = reader.GetInt32(reader.GetOrdinal("Phone")),
+                                DateOfBirth = reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
+                                PasswordHash = reader.GetString(reader.GetOrdinal("PasswordHash"))
+                            };
+                        }
+                        else
+                        {
+                            return null;
+                        }
+
+                    }
+                }
+            }
+
+        }
     }
 }

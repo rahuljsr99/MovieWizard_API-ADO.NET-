@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using MovieWizardAPI.Models;
 using System.Security.Cryptography;
+using MovieWizardAPI.Service.Interfaces;
 
 namespace MovieWizard_API_ADO.NET_.Controllers
 {
@@ -13,10 +14,32 @@ namespace MovieWizard_API_ADO.NET_.Controllers
     public class SecurityController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        public SecurityController(IConfiguration configuration)
+        private readonly ISecurityService _securityService;
+        public SecurityController(IConfiguration configuration, ISecurityService securityService)
         {
             _configuration = configuration;
+            _securityService = securityService;
         }
+        [HttpGet("ValidateUserAsync")]
+        public async Task<ActionResult<ValidateUserResponse>> ValidateUserAsync(string email, string password)
+        {
+            if (email == null || password == null)
+            {
+                return BadRequest("username/password is null");
+            }
+           
+            var LoginPermissionResponse = await _securityService.ValidateUserCredentials(email, password);
+            if (LoginPermissionResponse != null)
+            {
+                return Ok(LoginPermissionResponse);
+            }
+            else
+            {
+                return Unauthorized(LoginPermissionResponse);
+            }
+           
+        }
+
 
         [HttpPost("GetToken")]
         public IActionResult Login([FromBody] UserLogin login)

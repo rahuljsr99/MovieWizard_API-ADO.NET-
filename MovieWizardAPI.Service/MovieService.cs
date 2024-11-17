@@ -20,6 +20,20 @@ namespace MovieWizardAPI.Service
             var movies = queryResult.ToList();
             return movies;
         }
+
+        public async Task<List<MovieResponseForGrid>> GetAllMoviesForGrid()
+        {
+            try
+            {
+                var queryResult = await _movieRepository.GetAllMoviesForGrid();
+                return queryResult.ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            
+        }
         public async Task<int> AddMovie(MovieRequest movieRequest)
         {
             var queryResult = await _movieRepository.AddMovieAsync(movieRequest);

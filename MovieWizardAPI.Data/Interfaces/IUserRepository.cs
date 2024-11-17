@@ -15,5 +15,6 @@ namespace MovieWizardAPI.Data.Interfaces
         Task<int> AddUserAsync(User addUserRequest);
      
         Task UpdateUserAsync(User updateUserRequest);
+        Task<User> GetUserByEmailAsync(string email);
     }
 }

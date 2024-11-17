@@ -12,5 +12,6 @@ namespace MovieWizardAPI.Service.Interfaces
         Task<List<User>> GetAllUsers();
         Task<(int totalRecords, IEnumerable<User> users)> GetPagedUsers(int pageNumber, int pageSize);
         Task<int> AddUser(User addUserRequest);
+        Task<User> GetUserByEmail(string email);
     }
 }

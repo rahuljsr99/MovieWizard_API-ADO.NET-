@@ -14,18 +14,19 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
-
-builder.Services.AddSingleton<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<ISecurityService, SecurityService>();        // No change needed
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 
-builder.Services.AddSingleton<IGenreRepository, GenreRepository>();
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.AddScoped<IGenreService, GenreService>();
 
-builder.Services.AddSingleton<IActorRepository, ActorRepository>();
+builder.Services.AddScoped<IActorRepository, ActorRepository>();
 builder.Services.AddScoped<IActorService, ActorService>();
 
-builder.Services.AddSingleton<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();  // Changed to Scoped
+builder.Services.AddScoped<IUserService, UserService>();        // No change needed
+
 
 builder.Services.AddAuthentication(options =>
 {

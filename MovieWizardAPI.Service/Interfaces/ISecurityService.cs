@@ -7,10 +7,8 @@ using MovieWizardAPI.Models;
 
 namespace MovieWizardAPI.Service.Interfaces
 {
-    public interface IMovieService
+    public interface ISecurityService
     {
-        Task<List<MovieRequest>> GetAllMovies();
-        Task<List<MovieResponseForGrid>> GetAllMoviesForGrid();
-        Task<int> AddMovie(MovieRequest movieRequest);
+        Task<ValidateUserResponse> ValidateUserCredentials(string email, string password);
     }
 }

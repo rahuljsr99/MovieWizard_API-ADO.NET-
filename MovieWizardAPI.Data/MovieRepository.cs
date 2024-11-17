@@ -85,6 +85,101 @@ namespace MovieWizardAPI.Data
                 return allMovieList;
             }
         }
+        public async Task<List<MovieResponseForGrid>> GetAllMoviesForGrid()
+        {
+            var movieListForGrid = new List<MovieResponseForGrid>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                string query = @"
+                 SELECT m.MovieID, m.Title, m.Description, m.ImdbRating, m.RottenTomatoesRating, 
+                        m.Price, m.ReleaseDate, m.Poster,
+                        d.Name AS DirectorName, 
+                        a.Name AS ActorName, 
+                        g.GenreName AS GenreName
+                FROM Movies m
+                        LEFT JOIN MovieDirectors md ON m.MovieID = md.MovieID
+                        LEFT JOIN Directors d ON md.DirectorID = d.DirectorID
+                        LEFT JOIN MovieActors ma ON m.MovieID = ma.MovieID
+                        LEFT JOIN Actors a ON ma.ActorID = a.ActorID
+                        LEFT JOIN MovieGenres mg ON m.MovieID = mg.MovieID
+                        LEFT JOIN Genre g ON mg.GenreID = g.GenreID
+                        WHERE m.IsActive = 1
+                        ORDER BY m.MovieID;";
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        int? currentMovieID = null;
+                        MovieResponseForGrid currentMovie = null;
+                        var actors = new List<string>();
+                        var genres = new List<string>();
+
+                        while (reader.Read())
+                        {
+                            int movieID = reader.GetInt32(reader.GetOrdinal("MovieID"));
+
+                            if (currentMovieID != movieID)
+                            {
+                                // Save the current movie and reset for the next movie
+                                if (currentMovie != null)
+                                {
+                                    currentMovie.Actors = string.Join(", ", actors.Distinct());
+                                    currentMovie.Genre = string.Join(", ", genres.Distinct());
+                                    movieListForGrid.Add(currentMovie);
+                                }                             
+
+                                currentMovie = new MovieResponseForGrid
+                                {
+                                    MovieID = movieID,
+                                    Title = reader.GetString(reader.GetOrdinal("Title")),
+                                    Description = reader.GetString(reader.GetOrdinal("Description")),
+                                    ImdbRating = Convert.ToDecimal(reader.GetDouble(reader.GetOrdinal("ImdbRating"))),
+                                    RottenTomatoesRating = Convert.ToDecimal(reader.GetDouble(reader.GetOrdinal("RottenTomatoesRating"))),
+                                    Price = Convert.ToDecimal(reader.GetDecimal(reader.GetOrdinal("Price"))),
+                                    ReleaseDate = reader.GetDateTime(reader.GetOrdinal("ReleaseDate")),
+                                    Director = reader.IsDBNull(reader.GetOrdinal("DirectorName")) ? "Unknown" : reader.GetString(reader.GetOrdinal("DirectorName"))
+                                };
+
+                                actors.Clear();
+                                genres.Clear();
+
+                                if (!reader.IsDBNull(reader.GetOrdinal("Poster")))
+                                {
+                                    byte[] posterBytes = (byte[])reader["Poster"];
+                                    currentMovie.Poster = Convert.ToBase64String(posterBytes);
+                                }
+
+                                currentMovieID = movieID;
+                            }
+
+                            // Add actor and genre to the respective lists
+                            if (!reader.IsDBNull(reader.GetOrdinal("ActorName")))
+                            {
+                                actors.Add(reader.GetString(reader.GetOrdinal("ActorName")));
+                            }
+
+                            if (!reader.IsDBNull(reader.GetOrdinal("GenreName")))
+                            {
+                                genres.Add(reader.GetString(reader.GetOrdinal("GenreName")));
+                            }
+                        }
+
+                        // Add the last movie to the list
+                        if (currentMovie != null)
+                        {
+                            currentMovie.Actors = string.Join(", ", actors.Distinct());
+                            currentMovie.Genre = string.Join(", ", genres.Distinct());
+                            movieListForGrid.Add(currentMovie);
+                        }
+                    }
+                }
+            }
+            return movieListForGrid;
+        }
 
         public async Task<int> AddMovieAsync(MovieRequest movie)
         {
