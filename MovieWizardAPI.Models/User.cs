@@ -11,7 +11,6 @@ namespace MovieWizardAPI.Models
     {
         public int UserID { get; set; }
         public string? Username { get; set; } // Changed Name to Username for consistency
-        [JsonIgnore]
         public string? PasswordHash { get; set; } // Added PasswordHash
         public string? Email { get; set; }
         public int? Phone { get; set; }

@@ -41,7 +41,7 @@ namespace MovieWizard_API_ADO.NET_.Controllers
         [HttpPost("AddMovie")]
         public async Task<ActionResult> AddMovie(MovieRequest movieRequest)
         {
-            if (movieRequest == null)
+            if (!ModelState.IsValid)
             {
                 return BadRequest($"Invalid request");
             }

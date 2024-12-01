@@ -151,7 +151,7 @@ namespace MovieWizardAPI.Data
                         (Username, Email, PasswordHash, Phone, Age, Nationality, 
                          ProfilePicture, IsActive, CreatedAt, UpdatedAt, CreatedBy, UpdatedBy)
                     VALUES 
-                        (@Username, @Email, @PasswordHash, @Phone, @Age, @Nationality, 
+                        (@Username, @Email, @PasswordHash, @Phone, @Age, @Nationality, @Role, 
                          @ProfilePicture, @IsActive, @CreatedAt, @UpdatedAt, @CreatedBy, @UpdatedBy);
                     SELECT SCOPE_IDENTITY();"; // Return the new UserID
 
@@ -167,6 +167,7 @@ namespace MovieWizardAPI.Data
                         command.Parameters.AddWithValue("@UpdatedAt", DateTime.Now);
                         command.Parameters.AddWithValue("@CreatedBy", "AddUserEndpoint");
                         command.Parameters.AddWithValue("@UpdatedBy", "AddUserEndpoint");
+                        command.Parameters.AddWithValue("@Role", addUserRequest.Role);
 
                         // Handle ProfilePicture (nullable binary data)
                         if (addUserRequest.ProfilePicture == null)

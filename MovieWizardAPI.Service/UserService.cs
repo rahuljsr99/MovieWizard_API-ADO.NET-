@@ -23,7 +23,7 @@ namespace MovieWizardAPI.Service
         public async Task<(int totalRecords, IEnumerable<User> users)> GetPagedUsers(int pageNumber, int pageSize)
         {
             var queryResult = await _usersRepository.GetPagedUsersAsync(pageNumber, pageSize);
-            //var users = queryResult.ToList();
+
             return queryResult;
         }
         public async Task<int> AddUser(User addUserRequest)

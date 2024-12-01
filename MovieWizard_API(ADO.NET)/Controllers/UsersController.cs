@@ -43,7 +43,7 @@ namespace MovieWizard_API_ADO.NET_.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        [HttpPost]
+        [HttpPost("AddUser")]
         public async Task<IActionResult> AddUser(User addUser)
         {
             try

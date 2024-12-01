@@ -52,6 +52,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+//Minimal Apis
+app.MapGet("/Hello", () => "Hello!");
+app.MapGet("/HelloWithName", (string name) => $"Hello {name}");
+
 // Configure the HTTP request pipeline.
 app.UseAuthentication(); // This must come before UseAuthorization
 app.UseAuthorization();
