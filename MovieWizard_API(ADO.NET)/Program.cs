@@ -14,6 +14,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
+
+builder.Services.AddMemoryCache();
+
 builder.Services.AddScoped<ISecurityService, SecurityService>();        // No change needed
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IMovieService, MovieService>();
@@ -57,6 +60,7 @@ app.MapGet("/Hello", () => "Hello!");
 app.MapGet("/HelloWithName", (string name) => $"Hello {name}");
 
 // Configure the HTTP request pipeline.
+
 app.UseAuthentication(); // This must come before UseAuthorization
 app.UseAuthorization();
 

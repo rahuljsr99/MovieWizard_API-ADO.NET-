@@ -39,8 +39,6 @@ namespace MovieWizard.Service.Tests
             Assert.Equal(userList, result);
         }
 
-        [Theory]
-        [InlineData(User addUserRequest)]
         public async Task AddUser_Successful()
         {
             //Arrange

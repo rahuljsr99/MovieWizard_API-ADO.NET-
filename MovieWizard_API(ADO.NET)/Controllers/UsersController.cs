@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieWizardAPI.Models;
 using MovieWizardAPI.Service.Interfaces;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace MovieWizard_API_ADO.NET_.Controllers
 {
@@ -10,17 +11,42 @@ namespace MovieWizard_API_ADO.NET_.Controllers
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IMemoryCache _memoryCache;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IMemoryCache memoryCache)
         {
             _userService = userService;
+            _memoryCache = memoryCache;
         }
 
         [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var listOfAllUsers = await _userService.GetAllUsers();
-            return Ok(listOfAllUsers);
+
+            var cachedKey = "cachedKey";
+
+            // Check if data is in the cache
+            if (_memoryCache.TryGetValue(cachedKey, out var users))
+            {
+                // If data is found in cache, return it
+                return Ok(users);
+            }
+            else
+            {
+                // If not found in cache, fetch from service
+                var listOfAllUsers = await _userService.GetAllUsers();
+
+                // Cache the data with expiration policy
+                var cachedOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(10)) // Set absolute expiration (10 minutes)
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+                // Store the data in cache
+                _memoryCache.Set(cachedKey, listOfAllUsers, cachedOptions);
+
+                return Ok(listOfAllUsers);
+            }
+
         }
         [HttpGet("GetPagedUsers")]
         public async Task<IActionResult> GetPagedUsers(int pageNumber = 1, int pageSize = 5)
