@@ -180,7 +180,6 @@ namespace MovieWizardAPI.Data
             }
             return movieListForGrid;
         }
-
         public async Task<int> AddMovieAsync(MovieRequest movie)
         {
             using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
@@ -257,5 +256,28 @@ namespace MovieWizardAPI.Data
             }
 
         }
+        public async Task<int> GetMovieIdByNameAsync(string movieName)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                string query = @" SELECT MovieId from Movies 
+                                    WHERE MovieName like @MovieName and IsActive = 1";
+
+                using(SqlCommand command = new SqlCommand(query, connection)){
+
+                    command.Parameters.AddWithValue("@MovieName", "%" +  movieName + "%");
+                    var queryResult = await command.ExecuteScalarAsync();
+
+                    if (queryResult != DBNull.Value)
+                    {
+                        return Convert.ToInt32(queryResult);
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+            }
     }
 }

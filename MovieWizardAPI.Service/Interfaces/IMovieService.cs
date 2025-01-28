@@ -12,5 +12,6 @@ namespace MovieWizardAPI.Service.Interfaces
         Task<List<MovieRequest>> GetAllMovies();
         Task<List<MovieResponseForGrid>> GetAllMoviesForGrid();
         Task<int> AddMovie(MovieRequest movieRequest);
+        Task<int> GetMovieIdByName(string movieName);
     }
 }

@@ -11,5 +11,7 @@ namespace MovieWizardAPI.Service.Interfaces
     {
         Task<List<Director>> GetAllDirectors();
         Task<int> AddDirector(AddDirectorRequest addDirectorRequest);
+
+        Task<int> GetDirectorIdByName(string directorName);
     }
 }

@@ -11,5 +11,7 @@ namespace MovieWizardAPI.Data.Interfaces
     {
         Task<IEnumerable<Director>> GetAllDirectorsAsync();
         Task<int> AddDirectorAsync(AddDirectorRequest movieRequest);
+
+        Task<int> GetDirectorIdByNameAsync(string directorName);
     }
 }

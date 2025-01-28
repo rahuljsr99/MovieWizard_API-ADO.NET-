@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-    var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -28,6 +28,9 @@ builder.Services.AddScoped<IActorRepository, ActorRepository>();
 builder.Services.AddScoped<IActorService, ActorService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();  // Changed to Scoped
+builder.Services.AddScoped<IUserService, UserService>();        // No change needed
+
+builder.Services.AddScoped<ITransactionalRepository, TransactionalRepository>();  // Changed to Scoped
 builder.Services.AddScoped<IUserService, UserService>();        // No change needed
 
 
@@ -57,7 +60,7 @@ app.UseHttpsRedirection();
 
 //Minimal Apis
 app.MapGet("/Hello", () => "Hello!");
-app.MapGet("/HelloWithName", (string name) => $"Hello {name}");
+app.MapGet("/HelloWithName", (string name) => $"Hello {name} I am from Middleware");
 
 // Configure the HTTP request pipeline.
 
