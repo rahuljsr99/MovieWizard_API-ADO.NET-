@@ -19,6 +19,6 @@ namespace MovieWizardAPI.Models
         public string? CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
 
-        public double? Amount { get; set; }
+        public int? Amount { get; set; }
     }
 }

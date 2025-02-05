@@ -108,7 +108,7 @@ namespace MovieWizardAPI.Data
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@DirectorName", "%"+directorName + "%");
+                    command.Parameters.AddWithValue("@DirectorName", "%" + directorName + "%");
                     var result = await command.ExecuteScalarAsync();
 
                     if (result != DBNull.Value)
@@ -121,6 +121,7 @@ namespace MovieWizardAPI.Data
                     }
                 }
             }
+        }
     }
 }
 

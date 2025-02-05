@@ -71,7 +71,7 @@ namespace MovieWizardAPI.Data
                             try
                             {
                                 transaction.TransactionId = (string)reader["TransactionId"];
-                                transaction.Amount = (double)reader["Amount"];
+                                transaction.Amount = (int)reader["Amount"];
                                 transaction.InvoiceNumber = (int)reader["InvoiceNumber"];
                                 transaction.CreatedBy = (string)reader["CreatedBy"];
                                 transaction.CreatedOn = (DateTime)reader["CreatedOn"];
@@ -87,6 +87,61 @@ namespace MovieWizardAPI.Data
                 return transaction;
             }
         }
+
+        public async Task<int> SaveInvoiceToDb(Invoice invoice)
+        {
+            if (invoice == null)
+            {
+                return 0;
+            }
+            else
+            {
+                int invoiceNumber = 0;
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+                    using (SqlTransaction sqlTransaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            string query = @" INSERT INTO dbo.Invoices 
+                                    (MovieId, DirectorId, TransactionId, ModeOfPayment, CreatedBy, Amount) 
+                                    values (@MovieId, @DirectorId, @TransactionId, @ModeOfPayment, @CreatedBy, @Amount)
+
+                                    -- Get the last inserted InvoiceNumber
+                                    SELECT SCOPE_IDENTITY()";
+                            using (SqlCommand cmd = new SqlCommand(query, connection))
+                            {
+                                cmd.Transaction = sqlTransaction;
+                                cmd.Parameters.AddWithValue("@MovieId", invoice.MovieId);
+                                cmd.Parameters.AddWithValue("@DirectorId", invoice.DirectorId);
+                                cmd.Parameters.AddWithValue("@TransactionId", invoice.TransactionId);
+                                cmd.Parameters.AddWithValue("@ModeOfPayment", invoice.ModeOfPayment);
+                                cmd.Parameters.AddWithValue("@CreatedBy", invoice.CreatedBy);
+                                cmd.Parameters.AddWithValue("@Amount", invoice.Amount);
+
+                                // Execute the command and retrieve the InvoiceNumber (last inserted identity)
+                                invoiceNumber = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+
+
+
+                            }
+                            sqlTransaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            await sqlTransaction.RollbackAsync();
+                            throw ex;
+                        }
+
+                    }
+
+                }
+                return invoiceNumber;
+            }
+        }
+
     }
 }
-                      
+
+

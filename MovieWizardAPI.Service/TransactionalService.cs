@@ -25,7 +25,7 @@ namespace MovieWizardAPI.Service
             return await _transactionalRepository.GetLatestInvoiceNumber();
         }
 
-        public async Task<int> ProcessInvoiceToDb(Invoice invoice)
+        public async Task<int?> ProcessInvoiceToDb(Invoice invoice)
         {
 
             var directorId = await _directorService.GetDirectorIdByName(invoice.DirectorName);
@@ -43,7 +43,7 @@ namespace MovieWizardAPI.Service
                 ModeOfPayment = "UPI",
             };
 
-            var result = _transactionalRepository.SaveInvoiceToDb(DbInvoicePayload);
+            var result = await _transactionalRepository.SaveInvoiceToDb(DbInvoicePayload);
 
             return result;
         }

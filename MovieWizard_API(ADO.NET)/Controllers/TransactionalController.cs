@@ -34,7 +34,7 @@ namespace MovieWizard_API_ADO.NET_.Controllers
 
 
         [HttpPost("SaveInvoice")]
-        public IActionResult SaveInvoice(Invoice invoice)
+        public async Task<ActionResult<int>> SaveInvoice(Invoice invoice)
         {
             if (invoice == null)
             {
@@ -42,8 +42,8 @@ namespace MovieWizard_API_ADO.NET_.Controllers
             }
             else
             {
-                var result = await _transactionService.ProcessInvoiceToDb(invoice);
-                return Ok("Invoice Saved"); 
+                var invoiceNumber = await _transactionService.ProcessInvoiceToDb(invoice);
+                return Ok($"Invoice Saved, Invoice Number : {invoiceNumber}"); 
             }
         }
     }

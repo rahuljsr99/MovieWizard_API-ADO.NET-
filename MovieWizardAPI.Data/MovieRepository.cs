@@ -130,7 +130,7 @@ namespace MovieWizardAPI.Data
                                     currentMovie.Actors = string.Join(", ", actors.Distinct());
                                     currentMovie.Genre = string.Join(", ", genres.Distinct());
                                     movieListForGrid.Add(currentMovie);
-                                }                             
+                                }
 
                                 currentMovie = new MovieResponseForGrid
                                 {
@@ -264,9 +264,10 @@ namespace MovieWizardAPI.Data
                 string query = @" SELECT MovieId from Movies 
                                     WHERE MovieName like @MovieName and IsActive = 1";
 
-                using(SqlCommand command = new SqlCommand(query, connection)){
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
 
-                    command.Parameters.AddWithValue("@MovieName", "%" +  movieName + "%");
+                    command.Parameters.AddWithValue("@MovieName", "%" + movieName + "%");
                     var queryResult = await command.ExecuteScalarAsync();
 
                     if (queryResult != DBNull.Value)
@@ -279,5 +280,6 @@ namespace MovieWizardAPI.Data
                     }
                 }
             }
+        }
     }
 }

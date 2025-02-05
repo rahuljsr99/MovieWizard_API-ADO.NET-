@@ -10,8 +10,8 @@ namespace MovieWizardAPI.Service.Interfaces
 {
     public interface ITransactionalService
     {
-        int GetLatestInvoiceNumber();
-        Task<int> ProcessInvoiceToDb(Invoice invoice);
+        Task<int> GetLatestInvoiceNumber();
+        Task<int?> ProcessInvoiceToDb(Invoice invoice);
         Task<Transactions> GetTransaction(int invoiceNumber);
     }
 }
