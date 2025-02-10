@@ -3,6 +3,8 @@ using MovieWizardAPI.Data;
 using MovieWizardAPI.Service.Interfaces;
 using MovieWizardAPI.Data.Interfaces;
 using System.Transactions;
+using System.Text;
+using System.Globalization;
 
 
 namespace MovieWizardAPI.Service
@@ -30,15 +32,14 @@ namespace MovieWizardAPI.Service
 
             var directorId = await _directorService.GetDirectorIdByName(invoice.DirectorName);
             var movieId = await _movieService.GetMovieIdByName(invoice.MovieName);
-            var transaction = await GetTransaction(invoice.InvoiceNumber);
+            //var transaction = await GetTransaction(invoice.InvoiceNumber);
 
             Invoice DbInvoicePayload = new()
             {
                 DirectorId = directorId,
                 MovieId = movieId,
-                TransactionId = transaction.TransactionId,
-                Amount = transaction.Amount,
-                CreatedOn = DateTime.UtcNow,
+                TransactionNumber = invoice.TransactionNumber,
+                Amount = (double?)invoice.Amount,
                 CreatedBy = "User",
                 ModeOfPayment = "UPI",
             };
@@ -54,9 +55,18 @@ namespace MovieWizardAPI.Service
             return transaction;
         }
 
-        public async Task SaveTransaction(Transaction transaction)
+        public async Task<Invoice?> GetInvoice(int invoiceNumber)
         {
-            
+            Invoice? invoice = await _transactionalRepository.GetInvoiceByInvoiceNumber(invoiceNumber);
+            if (invoice != null)
+            {
+                return invoice;
+            }
+            else
+            {
+                return null;
+            }
         }
+        
     }
 }

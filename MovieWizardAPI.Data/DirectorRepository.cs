@@ -104,7 +104,7 @@ namespace MovieWizardAPI.Data
             {
                 await connection.OpenAsync();
                 string query = @" SELECT DirectorId from Directors
-                                   WHERE DirectorName like @DirectorName and IsActive = 1";
+                                   WHERE Name like @DirectorName and IsActive = 1";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {

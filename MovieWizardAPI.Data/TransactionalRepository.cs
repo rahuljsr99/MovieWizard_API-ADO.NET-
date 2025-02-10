@@ -105,8 +105,8 @@ namespace MovieWizardAPI.Data
                         try
                         {
                             string query = @" INSERT INTO dbo.Invoices 
-                                    (MovieId, DirectorId, TransactionId, ModeOfPayment, CreatedBy, Amount) 
-                                    values (@MovieId, @DirectorId, @TransactionId, @ModeOfPayment, @CreatedBy, @Amount)
+                                    (MovieId, DirectorId, TransactionNumber, ModeOfPayment, CreatedBy, Amount) 
+                                    values (@MovieId, @DirectorId, @TransactionNumber, @ModeOfPayment, @CreatedBy, @Amount)
 
                                     -- Get the last inserted InvoiceNumber
                                     SELECT SCOPE_IDENTITY()";
@@ -115,7 +115,7 @@ namespace MovieWizardAPI.Data
                                 cmd.Transaction = sqlTransaction;
                                 cmd.Parameters.AddWithValue("@MovieId", invoice.MovieId);
                                 cmd.Parameters.AddWithValue("@DirectorId", invoice.DirectorId);
-                                cmd.Parameters.AddWithValue("@TransactionId", invoice.TransactionId);
+                                cmd.Parameters.AddWithValue("@TransactionNumber", invoice.TransactionNumber);
                                 cmd.Parameters.AddWithValue("@ModeOfPayment", invoice.ModeOfPayment);
                                 cmd.Parameters.AddWithValue("@CreatedBy", invoice.CreatedBy);
                                 cmd.Parameters.AddWithValue("@Amount", invoice.Amount);
@@ -139,6 +139,78 @@ namespace MovieWizardAPI.Data
                 }
                 return invoiceNumber;
             }
+        }
+
+        public async Task<Invoice?> GetInvoiceByInvoiceNumber(int invoiceNumber)
+        {
+            Invoice invoice = null;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string query = "EXEC GetInvoiceProc @InvoiceNumber"; // Call the stored procedure
+
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@InvoiceNumber", invoiceNumber);
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (reader.HasRows)
+                        {
+                            // Assuming only one record is returned for the given InvoiceNumber
+                            while (await reader.ReadAsync())
+                            {
+                                try
+                                {
+                                    invoice = new Invoice
+                                    {
+                                        InvoiceNumber = invoiceNumber,
+                                        MovieId = (int)reader["MovieId"],
+                                        DirectorId = (int)reader["DirectorId"],
+                                        MovieName = (string)reader["MovieName"], 
+                                        DirectorName = (string)reader["DirectorName"], 
+                                        ModeOfPayment = (string)reader["ModeOfPayment"],
+                                        TransactionNumber = (string)reader["TransactionNumber"],
+                                        CreatedOn = ConvertDateTimeToFormattedString((DateTime)reader["CreatedOn"]),
+                                        CreatedBy = (string)reader["CreatedBy"],
+                                        Amount = Convert.ToDouble(reader["Amount"])
+                                    };
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new Exception("Error mapping data: " + ex.Message);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return invoice; // Returns the invoice object
+        }
+
+        private string ConvertDateTimeToFormattedString(DateTime date)
+        {
+            // Get the day of the month with the ordinal suffix
+            string dayWithOrdinal = GetDayWithOrdinal(date.Day);
+
+            // Format the date as "6th February, 2025 02:11 PM"
+            return $"{dayWithOrdinal} {date.ToString("MMMM, yyyy")} {date.ToString("hh:mm tt")}";
+        }
+
+        private string GetDayWithOrdinal(int day)
+        {
+            if (day % 10 == 1 && day != 11)
+                return $"{day}st";
+            if (day % 10 == 2 && day != 12)
+                return $"{day}nd";
+            if (day % 10 == 3 && day != 13)
+                return $"{day}rd";
+            return $"{day}th";
         }
 
     }

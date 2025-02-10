@@ -13,12 +13,12 @@ namespace MovieWizardAPI.Models
         public string? MovieName { get; set; }
         public int? DirectorId { get; set; }
         public string? DirectorName { get; set; }
-        public string? TransactionId { get; set; }
+        public string? TransactionNumber { get; set; }
         public string? ModeOfPayment { get; set; }
 
         public string? CreatedBy { get; set; }
-        public DateTime? CreatedOn { get; set; }
+        public string? CreatedOn { get; set; }
 
-        public int? Amount { get; set; }
+        public double? Amount { get; set; }
     }
 }

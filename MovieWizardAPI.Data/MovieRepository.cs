@@ -262,7 +262,7 @@ namespace MovieWizardAPI.Data
             {
                 await connection.OpenAsync();
                 string query = @" SELECT MovieId from Movies 
-                                    WHERE MovieName like @MovieName and IsActive = 1";
+                                    WHERE Title like @MovieName and IsActive = 1";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {

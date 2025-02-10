@@ -15,5 +15,7 @@ namespace MovieWizardAPI.Data.Interfaces
 
         Task<int> SaveInvoiceToDb(Invoice invoice);
 
+        Task<Invoice?> GetInvoiceByInvoiceNumber(int invoiceNumber);
+
     }
 }

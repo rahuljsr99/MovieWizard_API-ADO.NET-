@@ -17,7 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddMemoryCache();
 
-builder.Services.AddScoped<ISecurityService, SecurityService>();        // No change needed
+builder.Services.AddScoped<ISecurityService, SecurityService>();       // No change needed
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 
@@ -30,7 +30,11 @@ builder.Services.AddScoped<IActorService, ActorService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();  // Changed to Scoped
 builder.Services.AddScoped<IUserService, UserService>();        // No change needed
 
-builder.Services.AddScoped<ITransactionalRepository, TransactionalRepository>();  // Changed to Scoped
+builder.Services.AddScoped<ITransactionalRepository, TransactionalRepository>();
+builder.Services.AddScoped<ITransactionalService, TransactionalService>();
+
+builder.Services.AddScoped<IDirectorService, DirectorService>();
+builder.Services.AddScoped<IDirectorRepository, DirectorRepository>();
 builder.Services.AddScoped<IUserService, UserService>();        // No change needed
 
 
