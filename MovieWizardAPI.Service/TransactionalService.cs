@@ -67,6 +67,14 @@ namespace MovieWizardAPI.Service
                 return null;
             }
         }
-        
+
+        public async Task<double> GetTotalRevenue()
+        {
+            var totalRevenue = await _transactionalRepository.GetTotalRevenue();
+
+            return Convert.ToDouble(totalRevenue);
+        }
+
+
     }
 }

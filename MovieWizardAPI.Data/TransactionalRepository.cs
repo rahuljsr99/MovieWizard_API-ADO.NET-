@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Data;
 using System.Transactions;
+using System.Text.Json.Nodes;
 
 namespace MovieWizardAPI.Data
 {
@@ -193,6 +194,29 @@ namespace MovieWizardAPI.Data
             return invoice; // Returns the invoice object
         }
 
+        public async Task<object> GetTotalRevenue()
+        {
+            object totalRevenue;
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                string query = "Exec TotalRevenue";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.CommandType = CommandType.Text;
+
+                    var amount = cmd.ExecuteScalar();
+
+                    totalRevenue =  amount;
+
+                }
+            }
+                return totalRevenue;
+        }
+
         private string ConvertDateTimeToFormattedString(DateTime date)
         {
             // Get the day of the month with the ordinal suffix
@@ -212,6 +236,8 @@ namespace MovieWizardAPI.Data
                 return $"{day}rd";
             return $"{day}th";
         }
+
+        
 
     }
 }

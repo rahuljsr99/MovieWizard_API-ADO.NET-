@@ -17,5 +17,7 @@ namespace MovieWizardAPI.Data.Interfaces
 
         Task<Invoice?> GetInvoiceByInvoiceNumber(int invoiceNumber);
 
+        Task<object> GetTotalRevenue();
+
     }
 }

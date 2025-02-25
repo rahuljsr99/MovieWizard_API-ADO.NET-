@@ -14,5 +14,7 @@ namespace MovieWizardAPI.Service.Interfaces
         Task<int?> ProcessInvoiceToDb(Invoice invoice);
         Task<Transactions> GetTransaction(int invoiceNumber);
         Task<Invoice> GetInvoice(int invoiceNumber);
+
+        Task<double> GetTotalRevenue();
     }
 }

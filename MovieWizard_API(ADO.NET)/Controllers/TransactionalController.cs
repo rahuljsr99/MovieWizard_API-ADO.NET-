@@ -47,7 +47,7 @@ namespace MovieWizard_API_ADO.NET_.Controllers
                     status = 200,
                     invoiceNumber = invoiceNumber
                 };
-                 return Ok(response);
+                return Ok(response);
             }
         }
 
@@ -63,6 +63,21 @@ namespace MovieWizard_API_ADO.NET_.Controllers
             else
             {
                 return Ok(invoice);
+            }
+        }
+
+        [HttpGet("GetTotalRevenue")]
+
+        public async Task<double> GetTotalRevenue()
+        {
+            var totalRevenue = _transactionService.GetTotalRevenue().Result;
+            if (totalRevenue == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return totalRevenue;
             }
         }
     }
