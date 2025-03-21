@@ -97,6 +97,31 @@ namespace MovieWizardAPI.Data
                 }
             }
         }
+
+        public async Task<int> GetDirectorIdByNameAsync(string directorName)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                string query = @" SELECT DirectorId from Directors
+                                   WHERE Name like @DirectorName and IsActive = 1";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@DirectorName", "%" + directorName + "%");
+                    var result = await command.ExecuteScalarAsync();
+
+                    if (result != DBNull.Value)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+            }
+        }
     }
 }
 

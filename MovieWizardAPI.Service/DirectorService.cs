@@ -24,5 +24,11 @@ namespace MovieWizardAPI.Service
             var queryResult = await _directorRepository.AddDirectorAsync(addDirectorRequest);
             return queryResult;
         }
+
+        public async Task<int> GetDirectorIdByName(string directorName)
+        {
+            int directorId = await _directorRepository.GetDirectorIdByNameAsync(directorName);
+            return directorId;
+        }
     }
 }

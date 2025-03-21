@@ -12,6 +12,7 @@ namespace MovieWizardAPI.Data.Interfaces
         Task<IEnumerable<MovieRequest>> GetAllMoviesAsync();
         Task<List<MovieResponseForGrid>> GetAllMoviesForGrid();
         Task<int> AddMovieAsync(MovieRequest movieRequest);
+        Task<int> GetMovieIdByNameAsync(string movieName);
 
     }
 }
