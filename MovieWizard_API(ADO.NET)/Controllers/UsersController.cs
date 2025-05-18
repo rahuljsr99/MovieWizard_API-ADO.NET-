@@ -2,6 +2,8 @@
 using MovieWizardAPI.Models;
 using MovieWizardAPI.Service.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json.Linq;
+using System.Transactions;
 
 namespace MovieWizard_API_ADO.NET_.Controllers
 {
@@ -53,10 +55,9 @@ namespace MovieWizard_API_ADO.NET_.Controllers
         {
             try
             {
-                // Call the service method to fetch paginated users from the database
                 var pagedUsers = await _userService.GetPagedUsers(pageNumber, pageSize);
 
-                // Return a structured response with totalRecords and userList
+             
                 return Ok(new
                 {
                     totalRecords = pagedUsers.totalRecords,
@@ -65,9 +66,15 @@ namespace MovieWizard_API_ADO.NET_.Controllers
             }
             catch (Exception ex)
             {
-                // Handle any errors (optional)
+                
                 return BadRequest(new { message = ex.Message });
             }
+        }
+        [HttpGet("GetSoulCounts")]
+        public async Task<IActionResult> GetSoulCounts()
+        {
+            var soulCounts = await _userService.GetSoulCountsAsync();
+            return Ok(soulCounts);
         }
         [HttpPost("AddUser")]
         public async Task<IActionResult> AddUser(User addUser)
@@ -83,18 +90,23 @@ namespace MovieWizard_API_ADO.NET_.Controllers
             }
             
         }
-        [HttpPut]
-        public async Task<IActionResult> UpdateUser(User updateUser)
+        [HttpPatch("UpdateUserPartial")]
+        public async Task<IActionResult> UpdateUserPartial([FromBody] UpdateUserDTO userUpdate)
         {
-            try
-            {
-                await _userService.AddUser(updateUser);
-                return Ok($"{updateUser.Username} updated.");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            if (userUpdate == null || userUpdate.UserID <= 0)
+                return BadRequest("Invalid user data.");
+
+            var user = await _userService.GetUserById(userUpdate.UserID);
+            if (user == null)
+                return NotFound("User not found.");
+            if (user.IsActive)
+                userUpdate.IsActive = true;
+            else
+                userUpdate.IsActive = false;
+            var result = await _userService.UpdateUser(userUpdate);
+            if (result)
+                return Ok("Updated");
+            return BadRequest("Error in updating data");
 
         }
 

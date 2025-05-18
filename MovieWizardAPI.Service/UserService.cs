@@ -2,6 +2,9 @@
 using MovieWizardAPI.Data;
 using MovieWizardAPI.Service.Interfaces;
 using MovieWizardAPI.Data.Interfaces;
+using System.Data.SqlClient;
+using MovieWizardAPI.Models.ResponseModels;
+using Newtonsoft.Json.Linq;
 
 
 namespace MovieWizardAPI.Service
@@ -20,6 +23,11 @@ namespace MovieWizardAPI.Service
             var users = queryResult.ToList();
             return users;
         }
+        public async Task<User> GetUserById(int userId)
+        {
+            var result = await _usersRepository.GetUserByIdAsync(userId);
+            return result;
+        }
         public async Task<(int totalRecords, IEnumerable<User> users)> GetPagedUsers(int pageNumber, int pageSize)
         {
             var queryResult = await _usersRepository.GetPagedUsersAsync(pageNumber, pageSize);
@@ -37,6 +45,17 @@ namespace MovieWizardAPI.Service
            User user = await _usersRepository.GetUserByEmailAsync(email);
            return user;
         }
-           
+        public async Task<SoulCounts> GetSoulCountsAsync()
+        {
+            SoulCounts soulCounts = await _usersRepository.GetSoulCountsAsync();
+            return soulCounts;
+        }
+        public async Task<bool> UpdateUser(UpdateUserDTO userUpdate)
+        {
+   
+            var result = await _usersRepository.UpdateUserAsync(userUpdate);
+            return result;
+        }
+
     }
 }
