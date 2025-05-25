@@ -45,5 +45,10 @@ namespace MovieWizardAPI.Service
             int directorId = await _movieRepository.GetMovieIdByNameAsync(directorName);
             return directorId;
         }
+        public async Task<MovieMetrics> GetMovieMetrics()
+        {
+            var result = await _movieRepository.GetMovieMetricsAsync();
+            return result;
+        }
     }
 }

@@ -57,6 +57,19 @@ namespace MovieWizard_API_ADO.NET_.Controllers
             }
             
         }
+        [HttpGet("GetMovieMetrics")]
+        public async Task<IActionResult> GetMoviesMetrics()
+        {
+            var result = await _movieService.GetMovieMetrics();
+            if (result == null)
+            {
+                return BadRequest("No data");
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
 
         [Authorize]
         [HttpGet("TestAuth")]

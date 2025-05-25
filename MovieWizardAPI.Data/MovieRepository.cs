@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using System.Reflection;
 using System.Data;
+using MovieWizardAPI.Models.ResponseModels;
 
 namespace MovieWizardAPI.Data
 {
@@ -277,6 +278,37 @@ namespace MovieWizardAPI.Data
                     else
                     {
                         return -1;
+                    }
+                }
+            }
+        }
+        public async Task<MovieMetrics> GetMovieMetricsAsync()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                using (SqlCommand cmd = new SqlCommand("GetMovieMetrics", connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return new MovieMetrics
+                            {
+                                TotalMovies = reader.GetInt32(reader.GetOrdinal("TotalMovies")),
+                                TotalActiveMovies = reader.GetInt32(reader.GetOrdinal("TotalActiveMovies")),
+                                TotalInactiveMovies = reader.GetInt32(reader.GetOrdinal("TotalInactiveMovies")),
+                                TopFiveHighestSellingMovies = reader.IsDBNull(reader.GetOrdinal("TopFiveHighestSellingMovies"))
+                                    ? new List<string>()
+                                    : reader.GetString(reader.GetOrdinal("TopFiveHighestSellingMovies")).Split(',').ToList(),
+                                LeastFiveSellingMovies = reader.IsDBNull(reader.GetOrdinal("LeastFiveSellingMovies"))
+                                    ? new List<string>()
+                                    : reader.GetString(reader.GetOrdinal("LeastFiveSellingMovies")).Split(',').ToList()
+                            };
+                        }
+                        return null;
                     }
                 }
             }
