@@ -2,6 +2,7 @@
 using MovieWizardAPI.Service.Interfaces;
 using MovieWizardAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using MovieWizardAPI.Service;
 
 namespace MovieWizard_API_ADO.NET_.Controllers
 {
@@ -69,6 +70,36 @@ namespace MovieWizard_API_ADO.NET_.Controllers
             {
                 return Ok(result);
             }
+        }
+        public async Task<IActionResult> GetMovieById(int movieId)
+        {
+            if(movieId == 0)
+            {
+                return BadRequest("MovieId is 0");
+            }
+            else
+            {
+
+            }
+        }
+        [HttpPatch("UpdateUserPartial")]
+        public async Task<IActionResult> UpdateMovieDataPartial([FromBody] UpdateMoviePartial movieUpdate)
+        {
+            if (movieUpdate == null || movieUpdate.UserID <= 0)
+                return BadRequest("Invalid movie data.");
+
+            var user = await _movieService.GetMovieById(movieUpdate.UserID);
+            if (user == null)
+                return NotFound("User not found.");
+            if (user.IsActive)
+                userUpdate.IsActive = true;
+            else
+                userUpdate.IsActive = false;
+            var result = await _userService.UpdateUser(userUpdate);
+            if (result)
+                return Ok("Updated");
+            return BadRequest("Error in updating data");
+
         }
 
         [Authorize]

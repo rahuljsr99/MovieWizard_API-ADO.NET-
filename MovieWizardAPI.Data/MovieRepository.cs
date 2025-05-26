@@ -99,7 +99,8 @@ namespace MovieWizardAPI.Data
                         m.Price, m.ReleaseDate, m.Poster,
                         d.Name AS DirectorName, 
                         a.Name AS ActorName, 
-                        g.GenreName AS GenreName
+                        g.GenreName AS GenreName,
+                        m.IsActive as IsActive
                 FROM Movies m
                         LEFT JOIN MovieDirectors md ON m.MovieID = md.MovieID
                         LEFT JOIN Directors d ON md.DirectorID = d.DirectorID
@@ -142,7 +143,8 @@ namespace MovieWizardAPI.Data
                                     RottenTomatoesRating = Convert.ToDecimal(reader.GetDouble(reader.GetOrdinal("RottenTomatoesRating"))),
                                     Price = Convert.ToDecimal(reader.GetDecimal(reader.GetOrdinal("Price"))),
                                     ReleaseDate = reader.GetDateTime(reader.GetOrdinal("ReleaseDate")),
-                                    Director = reader.IsDBNull(reader.GetOrdinal("DirectorName")) ? "Unknown" : reader.GetString(reader.GetOrdinal("DirectorName"))
+                                    Director = reader.IsDBNull(reader.GetOrdinal("DirectorName")) ? "Unknown" : reader.GetString(reader.GetOrdinal("DirectorName")),                          
+                                    IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
                                 };
 
                                 actors.Clear();

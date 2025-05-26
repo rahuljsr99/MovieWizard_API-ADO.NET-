@@ -19,7 +19,7 @@ namespace MovieWizardAPI.Models
         public decimal Price { get; set; }               // Movie Price (Decimal for precision)
         public DateTime ReleaseDate { get; set; }        // Release Date
         public string Poster { get; set; }               // Movie Poster URL (optional)
-
+        public bool IsActive { get; set; }
 
     }
 }
