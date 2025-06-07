@@ -15,5 +15,6 @@ namespace MovieWizardAPI.Data.Interfaces
         Task<int> GetMovieIdByNameAsync(string movieName);
 
         Task<MovieMetrics> GetMovieMetricsAsync();
+        Task<List<MovieResponseForGrid>> SearchMovies(string term);
     }
 }

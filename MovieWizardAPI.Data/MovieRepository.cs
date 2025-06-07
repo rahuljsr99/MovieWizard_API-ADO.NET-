@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Data;
 using MovieWizardAPI.Models.ResponseModels;
+using System.IO;
 
 namespace MovieWizardAPI.Data
 {
@@ -314,6 +315,109 @@ namespace MovieWizardAPI.Data
                     }
                 }
             }
+        }
+        public async Task<List<MovieResponseForGrid>> SearchMovies(string term)
+        {
+            var movies = new List<MovieResponseForGrid>();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                string command =
+
+
+                     @"SELECT m.MovieID, m.Title, m.Description, m.ImdbRating, m.RottenTomatoesRating,
+                         m.Price, m.ReleaseDate, m.Poster,
+                        d.Name AS DirectorName,
+                        a.Name AS ActorName,
+                        g.GenreName AS GenreName,
+                        m.IsActive
+                     FROM Movies m
+                        INNER JOIN MovieDirectors md ON m.MovieID = md.MovieID
+                        INNER JOIN Directors d ON md.DirectorID = d.DirectorID
+                        INNER JOIN MovieActors ma ON m.MovieID = ma.MovieID
+                        INNER JOIN Actors a ON ma.ActorID = a.ActorID
+                        INNER JOIN MovieGenres mg ON m.MovieID = mg.MovieID
+                        INNER JOIN Genre g ON mg.GenreID = g.GenreID
+                        WHERE m.IsActive = 1 AND (
+                            LOWER(m.Title) LIKE '%' + @term + '%' OR
+                            LOWER(d.Name) LIKE '%' + @term + '%' OR
+                            LOWER(a.Name) LIKE '%' + @term + '%' OR
+                            LOWER(g.GenreName) LIKE '%' + @term + '%'
+                        )
+                        ORDER BY m.Title;                        ";
+                using (SqlCommand cmd = new SqlCommand(command, connection))
+                {
+                    cmd.Parameters.AddWithValue("@term", term.ToLower());
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        int? currentMovieID = null;
+                        MovieResponseForGrid currentMovie = null;
+                        var actors = new List<string>();
+                        var genres = new List<string>();
+
+                        while (reader.Read())
+                        {
+                            int movieID = reader.GetInt32(reader.GetOrdinal("MovieID"));
+
+                            if (currentMovieID != movieID)
+                            {
+                                // Save the current movie and reset for the next movie
+                                if (currentMovie != null)
+                                {
+                                    currentMovie.Actors = string.Join(", ", actors.Distinct());
+                                    currentMovie.Genre = string.Join(", ", genres.Distinct());
+                                    movies.Add(currentMovie);
+                                }
+
+                                currentMovie = new MovieResponseForGrid
+                                {
+                                    MovieID = movieID,
+                                    Title = reader.GetString(reader.GetOrdinal("Title")),
+                                    Description = reader.GetString(reader.GetOrdinal("Description")),
+                                    ImdbRating = Convert.ToDecimal(reader.GetDouble(reader.GetOrdinal("ImdbRating"))),
+                                    RottenTomatoesRating = Convert.ToDecimal(reader.GetDouble(reader.GetOrdinal("RottenTomatoesRating"))),
+                                    Price = Convert.ToDecimal(reader.GetDecimal(reader.GetOrdinal("Price"))),
+                                    ReleaseDate = reader.GetDateTime(reader.GetOrdinal("ReleaseDate")),
+                                    Director = reader.IsDBNull(reader.GetOrdinal("DirectorName")) ? "Unknown" : reader.GetString(reader.GetOrdinal("DirectorName")),
+                                    IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
+                                };
+
+                                actors.Clear();
+                                genres.Clear();
+
+                                if (!reader.IsDBNull(reader.GetOrdinal("Poster")))
+                                {
+                                    byte[] posterBytes = (byte[])reader["Poster"];
+                                    currentMovie.Poster = Convert.ToBase64String(posterBytes);
+                                }
+
+                                currentMovieID = movieID;
+                            }
+
+                            // Add actor and genre to the respective lists
+                            if (!reader.IsDBNull(reader.GetOrdinal("ActorName")))
+                            {
+                                actors.Add(reader.GetString(reader.GetOrdinal("ActorName")));
+                            }
+
+                            if (!reader.IsDBNull(reader.GetOrdinal("GenreName")))
+                            {
+                                genres.Add(reader.GetString(reader.GetOrdinal("GenreName")));
+                            }
+                        }
+
+                        // Add the last movie to the list
+                        if (currentMovie != null)
+                        {
+                            currentMovie.Actors = string.Join(", ", actors.Distinct());
+                            currentMovie.Genre = string.Join(", ", genres.Distinct());
+                            movies.Add(currentMovie);
+                        }
+                    }
+                }
+            }
+
+            return movies;
         }
     }
 }

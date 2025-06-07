@@ -23,7 +23,7 @@ namespace MovieWizard_API_ADO.NET_.Controllers
             var movieList =  _movieService.GetAllMovies().Result;
             return Ok(movieList);
         }
-
+        [Obsolete]
         [HttpGet("GetAllMoviesForGrid")]
         public async Task<ActionResult<List<MovieRequest>>> GetAllMoviesForGrid()
         {
@@ -71,35 +71,21 @@ namespace MovieWizard_API_ADO.NET_.Controllers
                 return Ok(result);
             }
         }
-        public async Task<IActionResult> GetMovieById(int movieId)
+        [HttpGet("SearchAndGetMovies")]
+        public async Task<ActionResult<List<MovieResponseForGrid>>> SearchMovies([FromQuery] string? term = "")
         {
-            if(movieId == 0)
+            if (string.IsNullOrEmpty(term))
             {
-                return BadRequest("MovieId is 0");
+                var allMovies = await _movieService.GetAllMovies();
+                return Ok(allMovies);
             }
-            else
+
+            var result = await _movieService.SearchMovies(term);
+            if (result == null || !result.Any())
             {
-
+                return BadRequest("No data");
             }
-        }
-        [HttpPatch("UpdateUserPartial")]
-        public async Task<IActionResult> UpdateMovieDataPartial([FromBody] UpdateMoviePartial movieUpdate)
-        {
-            if (movieUpdate == null || movieUpdate.UserID <= 0)
-                return BadRequest("Invalid movie data.");
-
-            var user = await _movieService.GetMovieById(movieUpdate.UserID);
-            if (user == null)
-                return NotFound("User not found.");
-            if (user.IsActive)
-                userUpdate.IsActive = true;
-            else
-                userUpdate.IsActive = false;
-            var result = await _userService.UpdateUser(userUpdate);
-            if (result)
-                return Ok("Updated");
-            return BadRequest("Error in updating data");
-
+            return Ok(result);
         }
 
         [Authorize]

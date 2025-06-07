@@ -2,6 +2,7 @@
 using MovieWizardAPI.Data;
 using MovieWizardAPI.Service.Interfaces;
 using MovieWizardAPI.Data.Interfaces;
+using System.Threading.Tasks;
 
 
 namespace MovieWizardAPI.Service
@@ -48,6 +49,11 @@ namespace MovieWizardAPI.Service
         public async Task<MovieMetrics> GetMovieMetrics()
         {
             var result = await _movieRepository.GetMovieMetricsAsync();
+            return result;
+        }
+        public async Task<List<MovieResponseForGrid>> SearchMovies(string term)
+        {
+            var result = await _movieRepository.SearchMovies(term);
             return result;
         }
     }
