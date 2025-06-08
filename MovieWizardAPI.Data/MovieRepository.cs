@@ -97,7 +97,7 @@ namespace MovieWizardAPI.Data
 
                 string query = @"
                  SELECT m.MovieID, m.Title, m.Description, m.ImdbRating, m.RottenTomatoesRating, 
-                        m.Price, m.ReleaseDate, m.Poster,
+                        P.SellingPrice as [Price], m.ReleaseDate, m.Poster,
                         d.Name AS DirectorName, 
                         a.Name AS ActorName, 
                         g.GenreName AS GenreName,
@@ -109,6 +109,7 @@ namespace MovieWizardAPI.Data
                         LEFT JOIN Actors a ON ma.ActorID = a.ActorID
                         LEFT JOIN MovieGenres mg ON m.MovieID = mg.MovieID
                         LEFT JOIN Genre g ON mg.GenreID = g.GenreID
+                        INNER JOIN Prices P ON P.MovieId = m.MovieId
                         WHERE m.IsActive = 1
                         ORDER BY m.MovieID;";
 
@@ -326,7 +327,7 @@ namespace MovieWizardAPI.Data
 
 
                      @"SELECT m.MovieID, m.Title, m.Description, m.ImdbRating, m.RottenTomatoesRating,
-                         m.Price, m.ReleaseDate, m.Poster,
+                         P.SellingPrice, m.ReleaseDate, m.Poster,
                         d.Name AS DirectorName,
                         a.Name AS ActorName,
                         g.GenreName AS GenreName,
@@ -338,13 +339,14 @@ namespace MovieWizardAPI.Data
                         INNER JOIN Actors a ON ma.ActorID = a.ActorID
                         INNER JOIN MovieGenres mg ON m.MovieID = mg.MovieID
                         INNER JOIN Genre g ON mg.GenreID = g.GenreID
+                        INNER JOIN Prices P ON P.MovieId = m.MovieId
                         WHERE m.IsActive = 1 AND (
                             LOWER(m.Title) LIKE '%' + @term + '%' OR
                             LOWER(d.Name) LIKE '%' + @term + '%' OR
                             LOWER(a.Name) LIKE '%' + @term + '%' OR
                             LOWER(g.GenreName) LIKE '%' + @term + '%'
                         )
-                        ORDER BY m.Title;                        ";
+                        ORDER BY m.Title; ";
                 using (SqlCommand cmd = new SqlCommand(command, connection))
                 {
                     cmd.Parameters.AddWithValue("@term", term.ToLower());

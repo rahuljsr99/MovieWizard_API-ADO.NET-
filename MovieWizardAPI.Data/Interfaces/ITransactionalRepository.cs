@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using MovieWizardAPI.Models;
+using MovieWizardAPI.Models.ResponseModels;
 
 namespace MovieWizardAPI.Data.Interfaces
 {
@@ -17,7 +18,7 @@ namespace MovieWizardAPI.Data.Interfaces
 
         Task<Invoice?> GetInvoiceByInvoiceNumber(int invoiceNumber);
 
-        Task<object> GetTotalRevenue();
+        Task<TotalRevenue> GetTotalRevenue();
 
     }
 }

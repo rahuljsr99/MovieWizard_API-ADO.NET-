@@ -5,6 +5,7 @@ using MovieWizardAPI.Data.Interfaces;
 using System.Transactions;
 using System.Text;
 using System.Globalization;
+using MovieWizardAPI.Models.ResponseModels;
 
 
 namespace MovieWizardAPI.Service
@@ -42,6 +43,7 @@ namespace MovieWizardAPI.Service
                 Amount = (double?)invoice.Amount,
                 CreatedBy = "User",
                 ModeOfPayment = "UPI",
+                ItemType = invoice.ItemType
             };
 
             var result = await _transactionalRepository.SaveInvoiceToDb(DbInvoicePayload);
@@ -68,11 +70,11 @@ namespace MovieWizardAPI.Service
             }
         }
 
-        public async Task<double> GetTotalRevenue()
+        public async Task<TotalRevenue> GetTotalRevenue()
         {
             var totalRevenue = await _transactionalRepository.GetTotalRevenue();
 
-            return Convert.ToDouble(totalRevenue);
+            return (totalRevenue);
         }
 
 

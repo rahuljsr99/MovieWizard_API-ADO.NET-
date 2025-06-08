@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Data;
 using System.Transactions;
 using System.Text.Json.Nodes;
+using System.Reflection.PortableExecutable;
 
 namespace MovieWizardAPI.Data
 {
@@ -106,8 +107,8 @@ namespace MovieWizardAPI.Data
                         try
                         {
                             string query = @" INSERT INTO dbo.Invoices 
-                                    (MovieId, DirectorId, TransactionNumber, ModeOfPayment, CreatedBy, Amount) 
-                                    values (@MovieId, @DirectorId, @TransactionNumber, @ModeOfPayment, @CreatedBy, @Amount)
+                                    (MovieId, DirectorId, TransactionNumber, ModeOfPayment, CreatedBy, Amount, ItemType) 
+                                    values (@MovieId, @DirectorId, @TransactionNumber, @ModeOfPayment, @CreatedBy, @Amount, @ItemType)
 
                                     -- Get the last inserted InvoiceNumber
                                     SELECT SCOPE_IDENTITY()";
@@ -120,6 +121,7 @@ namespace MovieWizardAPI.Data
                                 cmd.Parameters.AddWithValue("@ModeOfPayment", invoice.ModeOfPayment);
                                 cmd.Parameters.AddWithValue("@CreatedBy", invoice.CreatedBy);
                                 cmd.Parameters.AddWithValue("@Amount", invoice.Amount);
+                                cmd.Parameters.AddWithValue("@ItemType", invoice.ItemType);
 
                                 // Execute the command and retrieve the InvoiceNumber (last inserted identity)
                                 invoiceNumber = Convert.ToInt32(await cmd.ExecuteScalarAsync());
@@ -194,9 +196,9 @@ namespace MovieWizardAPI.Data
             return invoice; // Returns the invoice object
         }
 
-        public async Task<object> GetTotalRevenue()
+        public async Task<TotalRevenue> GetTotalRevenue()
         {
-            object totalRevenue;
+            TotalRevenue totalRevenue = new TotalRevenue() ;
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -208,9 +210,30 @@ namespace MovieWizardAPI.Data
                 {
                     cmd.CommandType = CommandType.Text;
 
-                    var amount = cmd.ExecuteScalar();
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (reader.HasRows)
+                        {
+                            // Assuming only one record is returned for the given InvoiceNumber
+                            while (await reader.ReadAsync())
+                            {
+                                try
+                                {
+                                    totalRevenue = new TotalRevenue
+                                    {
+                                        TotalRevenueAmount = (decimal)reader["TotalRevenue"],
+                                        TotalRevenueFromMovies = (decimal)reader["TotalRevenueFromMovies"],
+                                        TotalRevenueFromTVShows = (decimal)reader["TotalRevenueFromTVShows"]
+                                    };
 
-                    totalRevenue =  amount;
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new Exception("Error mapping data: " + ex.Message);
+                                }
+                            }
+                        }
+                    }
 
                 }
             }

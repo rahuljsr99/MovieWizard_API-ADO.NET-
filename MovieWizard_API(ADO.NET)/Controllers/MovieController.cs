@@ -76,7 +76,7 @@ namespace MovieWizard_API_ADO.NET_.Controllers
         {
             if (string.IsNullOrEmpty(term))
             {
-                var allMovies = await _movieService.GetAllMovies();
+                var allMovies = await _movieService.GetAllMoviesForGrid();
                 return Ok(allMovies);
             }
 

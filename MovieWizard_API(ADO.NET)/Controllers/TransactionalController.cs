@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieWizardAPI.Models;
 using MovieWizardAPI.Service.Interfaces;
+using MovieWizardAPI.Models.ResponseModels;
 
 namespace MovieWizard_API_ADO.NET_.Controllers
 {
@@ -68,12 +69,12 @@ namespace MovieWizard_API_ADO.NET_.Controllers
 
         [HttpGet("GetTotalRevenue")]
 
-        public async Task<double> GetTotalRevenue()
+        public async Task<TotalRevenue> GetTotalRevenue()
         {
             var totalRevenue = _transactionService.GetTotalRevenue().Result;
             if (totalRevenue == null)
             {
-                return 0;
+                return null;
             }
             else
             {

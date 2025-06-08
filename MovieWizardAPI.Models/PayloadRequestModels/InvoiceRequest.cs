@@ -15,10 +15,10 @@ namespace MovieWizardAPI.Models
         public string? DirectorName { get; set; }
         public string? TransactionNumber { get; set; }
         public string? ModeOfPayment { get; set; }
-
+        public string? ItemType { get; set; }
         public string? CreatedBy { get; set; }
         public string? CreatedOn { get; set; }
-
+        public int? TVShowID { get; set; }
         public double? Amount { get; set; }
     }
 }
